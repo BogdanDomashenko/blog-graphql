@@ -1,4 +1,5 @@
 const { User } = require("../models/models");
+const { UserService } = require("../services/User.service");
 
 const users = [{ id: 1, username: "Vasya", age: 25 }];
 
@@ -9,11 +10,10 @@ exports.root = {
   getUser: ({ id }) => {
     return users.find((user) => user.id === id);
   },
-  createUser: async ({ input }) => {
-    console.log({ input });
-    const newUser = new User(input);
-    const user = await newUser.save();
-    console.log({ user });
-    return user;
+  signup: async ({ input }) => {
+    return await UserService.signup(input.username, input.password);
+  },
+  signin: async ({ input }) => {
+    return await UserService.signin(input.username, input.password);
   },
 };

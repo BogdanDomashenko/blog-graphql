@@ -4,7 +4,7 @@ exports.grapqlSchema = buildSchema(`
   type User {
     id: ID
     username: String
-    age: Int
+    password: String!
     posts: [Post]
   }
 
@@ -17,8 +17,7 @@ exports.grapqlSchema = buildSchema(`
   input UserInput {
     id: ID
     username: String!
-    age: Int!
-    posts: [PostInput]
+    password: String!
   }
 
   input PostInput {
@@ -33,6 +32,7 @@ exports.grapqlSchema = buildSchema(`
   }
 
   type Mutation {
-    createUser(input: UserInput): User
+    signup(input: UserInput): User
+    signin(input: UserInput): User
   }
 `);
