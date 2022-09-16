@@ -27,14 +27,18 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(
   "/graphql",
   graphqlHTTP((req) => {
+    const { authorization = "" } = req.headers;
+
+    const token = authorization.split("Bearer ")[1];
+
+    const user = token ? JwtService.verifyAccessToken(token) : null;
+
     return {
       schema: makeExecutableSchema({ typeDefs: grapqlSchema, resolvers }),
       graphiql: {
         headerEditorEnabled: true,
       },
-      context: {
-        user: "AHJDBqwhjb",
-      },
+      context: { user },
       /* rootValue: root, */
     };
   })

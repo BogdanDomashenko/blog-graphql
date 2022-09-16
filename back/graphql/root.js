@@ -20,7 +20,7 @@ exports.root = {
 exports.resolvers = {
   Query: {
     getAllPosts: (parent, args, context) => {
-      console.log(context);
+      console.log(context.user);
       return [{ id: 1, title: "Hello World", content: "Hello World1" }];
     },
   },
