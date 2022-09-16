@@ -8,6 +8,9 @@ const { graphqlHTTP } = require("express-graphql");
 const { grapqlSchema } = require("./graphql/schema");
 const { root } = require("./graphql/root");
 const { default: mongoose } = require("mongoose");
+const { applyMiddleware } = require("graphql-middleware");
+const { permissions } = require("./guard/guards");
+const { JwtService } = require("./services/Jwt.service");
 
 const app = express();
 
@@ -24,6 +27,17 @@ app.use(
   graphqlHTTP({
     graphiql: true,
     schema: grapqlSchema,
+    graphiql: {
+      headerEditorEnabled: true,
+    },
+    context: ({ req }) => {
+      const { authorization } = req;
+
+      const token = authorization.replace("Bearer", "").trim();
+      const user = JwtService.verifyAccessToken(token);
+
+      return user;
+    },
     rootValue: root,
   })
 );

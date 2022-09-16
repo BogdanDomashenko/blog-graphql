@@ -12,6 +12,7 @@ exports.grapqlSchema = buildSchema(`
     id: ID
     title: String
     content: String
+    author: User
   }
 
   input UserInput {
