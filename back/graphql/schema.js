@@ -26,6 +26,12 @@ exports.grapqlSchema = buildSchema(`
     content: String!
   }
 
+  type SigninOutput {
+    id: ID
+    username: String
+    token: String
+  }
+
   type Query {
     getAllUsers: [User]
     getUser(id: ID): User
@@ -33,6 +39,6 @@ exports.grapqlSchema = buildSchema(`
 
   type Mutation {
     signup(input: UserInput): User
-    signin(input: UserInput): User
+    signin(input: UserInput): SigninOutput
   }
 `);
