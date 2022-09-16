@@ -4,8 +4,10 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
 const { graphqlHTTP } = require("express-graphql");
+const { makeExecutableSchema } = require("@graphql-tools/schema");
 
 const { grapqlSchema } = require("./graphql/schema");
+const { resolvers } = require("./graphql/root");
 const { root } = require("./graphql/root");
 const { default: mongoose } = require("mongoose");
 const { applyMiddleware } = require("graphql-middleware");
@@ -24,23 +26,37 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   "/graphql",
-  graphqlHTTP({
-    graphiql: true,
-    schema: grapqlSchema,
-    graphiql: {
-      headerEditorEnabled: true,
-    },
-    context: ({ req }) => {
-      const { authorization } = req;
-
-      const token = authorization.replace("Bearer", "").trim();
-      const user = JwtService.verifyAccessToken(token);
-
-      return user;
-    },
-    rootValue: root,
+  graphqlHTTP((req) => {
+    return {
+      schema: makeExecutableSchema({ typeDefs: grapqlSchema, resolvers }),
+      graphiql: {
+        headerEditorEnabled: true,
+      },
+      context: {
+        user: "AHJDBqwhjb",
+      },
+      /* rootValue: root, */
+    };
   })
 );
+
+/* graphqlHTTP({
+  graphiql: true,
+  schema: grapqlSchema,
+  graphiql: {
+    headerEditorEnabled: true,
+  },
+  context: ({ req }) => {
+    const { authorization } = req;
+
+    const token = authorization.replace("Bearer", "").trim();
+    const user = JwtService.verifyAccessToken(token) || null;
+    ``;
+
+    return { user };
+  },
+  rootValue: root,
+}) */
 
 const start = async () => {
   try {

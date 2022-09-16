@@ -36,6 +36,7 @@ exports.grapqlSchema = buildSchema(`
   type Query {
     getAllUsers: [User]
     getUser(id: ID): User
+    getAllPosts: [Post]
   }
 
   type Mutation {

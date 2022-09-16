@@ -5,12 +5,6 @@ const { UserService } = require("../services/User.service");
 const users = [{ id: 1, username: "Vasya", age: 25 }];
 
 exports.root = {
-  getAllUsers: () => {
-    return users;
-  },
-  getUser: ({ id }) => {
-    return users.find((user) => user.id === id);
-  },
   signup: async ({ input }) => {
     return await UserService.signup(input.username, input.password);
   },
@@ -20,5 +14,26 @@ exports.root = {
 
     const token = JwtService.generateAccessToken(data);
     return { ...data, token };
+  },
+};
+
+exports.resolvers = {
+  Query: {
+    getAllPosts: (parent, args, context) => {
+      console.log(context);
+      return [{ id: 1, title: "Hello World", content: "Hello World1" }];
+    },
+  },
+  Mutation: {
+    signup: async (_, { input }) => {
+      return await UserService.signup(input.username, input.password);
+    },
+    signin: async (_, { input }) => {
+      const user = await UserService.signin(input.username, input.password);
+      const data = { id: user._id, username: user.username };
+
+      const token = JwtService.generateAccessToken(data);
+      return { ...data, token };
+    },
   },
 };
