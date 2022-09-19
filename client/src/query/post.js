@@ -12,3 +12,12 @@ export const GET_ALL_POSTS = gql`
     }
   }
 `;
+
+export const CREATE_POST = gql`
+  mutation createPost($input: PostInput) {
+    createPost(input: $input) {
+      title
+      content
+    }
+  }
+`;

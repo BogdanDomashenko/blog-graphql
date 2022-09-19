@@ -9,6 +9,7 @@ const PostContainer = styled.div`
   background: ${purple[100]};
   padding: 30px;
   border-radius: 5px;
+  margin-bottom: 20px;
 `;
 
 const Author = styled.div`
