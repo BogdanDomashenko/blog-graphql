@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import { Box, Link } from "@mui/material";
 import { purple } from "@mui/material/colors";
 import { Container } from "@mui/system";
+import { NavLink } from "react-router-dom";
 
 const NavbarContainer = styled.div`
   display: flex;
@@ -21,10 +22,10 @@ const Navbar = () => {
       <Container>
         <Items>
           <div>
-            <Link>Posts</Link>
+            <NavLink to="/">Posts</NavLink>
           </div>
           <div>
-            <Link>Sign in</Link>
+            <NavLink to="/signin">Sign in</NavLink>
           </div>
         </Items>
       </Container>
