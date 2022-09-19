@@ -1,8 +1,11 @@
+import { useMutation } from "@apollo/client";
 import styled from "@emotion/styled";
 import { Button, Container, TextField, Typography } from "@mui/material";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Wrapper from "../components/wrapper/Wrapper";
+import { SIGNIN } from "../mutation/user";
 
 export const FromContainer = styled.form`
   display: flex;
@@ -22,7 +25,28 @@ const Signin = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  const [signin] = useMutation(SIGNIN, {
+    update() {},
+    onError(err) {
+      const errMsg = `${err}`.split(":")[1];
+      setError(errMsg);
+    },
+  });
+
+  const onSubmit = async (data) => {
+    const user = await signin({
+      variables: {
+        input: data,
+      },
+    });
+
+    localStorage.setItem("token", user.data.signin.token);
+    window.location.href = "/";
+  };
 
   return (
     <Container>
@@ -40,6 +64,7 @@ const Signin = () => {
           <NavLink to="/signup">
             <Button>Sign up</Button>
           </NavLink>
+          {error && error}
         </FromContainer>
       </Wrapper>
     </Container>

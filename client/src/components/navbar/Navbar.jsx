@@ -17,6 +17,13 @@ const Items = styled.div`
 `;
 
 const Navbar = () => {
+  const token = localStorage.getItem("token");
+
+  const handleClickLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  };
+
   return (
     <NavbarContainer>
       <Container>
@@ -25,7 +32,11 @@ const Navbar = () => {
             <NavLink to="/">Posts</NavLink>
           </div>
           <div>
-            <NavLink to="/signin">Sign in</NavLink>
+            {token ? (
+              <a onClick={handleClickLogout}>Logout</a>
+            ) : (
+              <NavLink to="/signin">Sign in</NavLink>
+            )}
           </div>
         </Items>
       </Container>

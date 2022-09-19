@@ -7,10 +7,14 @@ export const SIGNUP = gql`
       username
     }
   }
-  query {
-    signin {
+`;
+
+export const SIGNIN = gql`
+  mutation signin($input: UserInput) {
+    signin(input: $input) {
+      id
       username
-      password
+      token
     }
   }
 `;
