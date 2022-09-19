@@ -18,6 +18,10 @@ const NavbarContainer = styled.div`
 const Items = styled.div`
   display: flex;
   justify-content: space-between;
+  div {
+    display: flex;
+    gap: 20px;
+  }
 `;
 
 const Navbar = () => {
@@ -34,6 +38,7 @@ const Navbar = () => {
         <Items>
           <div>
             <NavLink to="/">Posts</NavLink>
+            <NavLink to="/chat">Chat</NavLink>
           </div>
           <div>
             {token ? (
