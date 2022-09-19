@@ -20,13 +20,6 @@ exports.root = {
 
 exports.resolvers = {
   Query: {
-    signin: async (_, { input }) => {
-      const user = await UserService.signin(input.username, input.password);
-      const data = { id: user._id, username: user.username };
-
-      const token = JwtService.generateAccessToken(data);
-      return { ...data, token };
-    },
     getAllPosts: async (parent, args, context) => {
       const posts = await PostService.getAll();
       return posts;
@@ -35,6 +28,13 @@ exports.resolvers = {
   Mutation: {
     signup: async (_, { input }) => {
       return await UserService.signup(input.username, input.password);
+    },
+    signin: async (_, { input }) => {
+      const user = await UserService.signin(input.username, input.password);
+      const data = { id: user._id, username: user.username };
+
+      const token = JwtService.generateAccessToken(data);
+      return { ...data, token };
     },
     createPost: async (_, { input }, context) => {
       const { user } = context;

@@ -34,13 +34,13 @@ exports.grapqlSchema = buildSchema(`
   }
 
   type Query {
-    signin(input: UserInput): SigninOutput
     getAllUsers: [User]
     getUser(id: ID): User
     getAllPosts: [Post]
   }
 
   type Mutation {
+    signin(input: UserInput): SigninOutput
     signup(input: UserInput): User
     createPost(input: PostInput): Post
   }
