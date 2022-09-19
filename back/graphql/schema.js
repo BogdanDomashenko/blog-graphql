@@ -34,6 +34,7 @@ exports.grapqlSchema = buildSchema(`
   }
 
   type Query {
+    signin(input: UserInput): SigninOutput
     getAllUsers: [User]
     getUser(id: ID): User
     getAllPosts: [Post]
@@ -41,6 +42,6 @@ exports.grapqlSchema = buildSchema(`
 
   type Mutation {
     signup(input: UserInput): User
-    signin(input: UserInput): SigninOutput
+    createPost(input: PostInput): Post
   }
 `);
