@@ -5,6 +5,10 @@ import { Container } from "@mui/system";
 import { NavLink } from "react-router-dom";
 
 const NavbarContainer = styled.div`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 3;
   display: flex;
   justify-content: space-between;
   background: ${purple[700]};

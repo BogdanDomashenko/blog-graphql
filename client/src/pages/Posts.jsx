@@ -19,6 +19,7 @@ const Posts = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
   const [addError, setAddError] = useState(null);
@@ -47,6 +48,7 @@ const Posts = () => {
         input: data,
       },
     });
+    reset();
     await refetch();
   };
 
@@ -79,12 +81,12 @@ const Posts = () => {
         )}
         <Wrapper>
           {!loading &&
-            posts.map((post) => (
+            posts.map((post, index) => (
               <Post
                 title={post.title}
                 content={post.content}
                 author={post.author}
-                key={post.title}
+                key={index}
               />
             ))}
         </Wrapper>
