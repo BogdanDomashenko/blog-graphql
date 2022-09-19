@@ -1,7 +1,28 @@
 import styled from "@emotion/styled";
 import { Button, Container, TextField } from "@mui/material";
+import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { createClient } from "graphql-ws";
 import Message from "../components/message/Message";
 import Wrapper from "../components/wrapper/Wrapper";
+import { split } from "@apollo/client";
+
+const wsLink = new GraphQLWsLink(
+  createClient({
+    url: "ws://localhost:4000/subscriptions",
+  })
+);
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === "OperationDefinition" &&
+      definition.operation === "subscription"
+    );
+  },
+  wsLink,
+  httpLink
+);
 
 const MessagesContainer = styled.div`
   display: flex;
