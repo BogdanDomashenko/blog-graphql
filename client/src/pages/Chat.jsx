@@ -4,7 +4,10 @@ import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
 import Message from "../components/message/Message";
 import Wrapper from "../components/wrapper/Wrapper";
-import { split } from "@apollo/client";
+import { split, useSubscription } from "@apollo/client";
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { MESSAGE_SUBSCRIPTION } from "../../subscription/message";
 
 const MessagesContainer = styled.div`
   display: flex;
@@ -21,6 +24,15 @@ const MessageForm = styled.form`
 `;
 
 const Chat = () => {
+  const { register, handleSubmit } = useForm();
+
+  /* const [signin] = useMutation(SIGNIN); */
+  const { data, loading } = useSubscription(MESSAGE_SUBSCRIPTION);
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   return (
     <Container>
       <Wrapper>

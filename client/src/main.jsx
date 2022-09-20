@@ -18,9 +18,9 @@ const httpLink = new HttpLink({
   uri: "http://localhost:3000/graphql",
 });
 
-/* const wsLink = new GraphQLWsLink(
+const wsLink = new GraphQLWsLink(
   createClient({
-    url: "ws://localhost:4000/subscriptions",
+    url: "ws://localhost:3000/subscriptions",
   })
 );
 
@@ -34,10 +34,10 @@ const splitLink = split(
   },
   wsLink,
   httpLink
-); */
+);
 
 const client = new ApolloClient({
-  uri: "http://localhost:3000/graphql",
+  uri: splitLink,
   cache: new InMemoryCache(),
 });
 
