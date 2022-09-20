@@ -14,5 +14,11 @@ const PostSchema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
+const MessageSchema = new Schema({
+  text: { type: String, required: true },
+  author: { type: Schema.Types.ObjectId, ref: "User" },
+});
+
 exports.User = mongoose.model("User", UserSchema);
 exports.Post = mongoose.model("Post", PostSchema);
+exports.Message = mongoose.model("Message", MessageSchema);

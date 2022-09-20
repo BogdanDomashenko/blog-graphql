@@ -2,8 +2,9 @@ const { User } = require("../models/models");
 const { JwtService } = require("../services/Jwt.service");
 const { PostService } = require("../services/Post.service");
 const { UserService } = require("../services/User.service");
+const { MessageService } = require("../services/Message.service");
 
-const users = [{ id: 1, username: "Vasya", age: 25 }];
+const NEW_MESSAGE_EVENT = "NEW_MESSAGE_EVENT";
 
 exports.root = {
   signup: async ({ input }) => {
@@ -49,6 +50,22 @@ exports.resolvers = {
         input.content
       );
       return post;
+    },
+    addMessage: async (_, { input }, { pubsub, user }) => {
+      if (!user) {
+        throw new Error("Unautorized");
+      }
+
+      const message = await MessageService.create(user.id, input.text);
+
+      pubsub.publish(NEW_MESSAGE_EVENT, message);
+
+      return message;
+    },
+  },
+  Subscription: {
+    messageAdded: {
+      subscribe: (_, __, { pubsub }) => pubsub.asyncIterator(NEW_MESSAGE_EVENT),
     },
   },
 };

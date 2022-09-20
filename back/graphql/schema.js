@@ -15,6 +15,12 @@ exports.grapqlSchema = buildSchema(`
     author: User
   }
 
+  type Message {
+    id: ID
+    text: String
+    author: User
+  }
+
   input UserInput {
     id: ID
     username: String!
@@ -25,6 +31,11 @@ exports.grapqlSchema = buildSchema(`
     id: ID
     title: String!
     content: String!
+  }
+
+  input MessageInput {
+    id: ID
+    text: String!
   }
 
   type SigninOutput {
@@ -43,5 +54,10 @@ exports.grapqlSchema = buildSchema(`
     signin(input: UserInput): SigninOutput
     signup(input: UserInput): User
     createPost(input: PostInput): Post
+    addMessage(input: MessageInput): Message
+  }
+
+  type Subscription {
+    messageAdded: Message
   }
 `);
