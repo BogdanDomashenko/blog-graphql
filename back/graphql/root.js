@@ -26,6 +26,10 @@ exports.resolvers = {
       const posts = await PostService.getAll();
       return posts;
     },
+    getAllMessages: async () => {
+      const messages = await MessageService.getAll();
+      return messages;
+    },
   },
   Mutation: {
     signup: async (_, { input }) => {

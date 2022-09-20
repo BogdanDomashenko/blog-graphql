@@ -48,6 +48,7 @@ exports.grapqlSchema = buildSchema(`
     getAllUsers: [User]
     getUser(id: ID): User
     getAllPosts: [Post]
+    getAllMessages: [Message]
   }
 
   type Mutation {
