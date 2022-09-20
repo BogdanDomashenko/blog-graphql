@@ -9,6 +9,7 @@ const ws = require("ws");
 const { useServer } = require("graphql-ws/lib/use/ws");
 const { execute, subscribe } = require("graphql");
 const pubsub = require("./helpers/pubsub");
+const { server } = require("./bin/www");
 
 const { grapqlSchema } = require("./graphql/schema");
 const { resolvers } = require("./graphql/root");
@@ -41,7 +42,7 @@ app.use(
       graphiql: {
         headerEditorEnabled: true,
       },
-      context: { user, pubsub },
+      context: { user },
       /* rootValue: root, */
     };
   })
@@ -72,8 +73,8 @@ const start = async () => {
     );
 
     console.log(`GraphQL Server running on http://localhost:3000/graphql`);
-    /* 
-    const wsServer = new ws.Server({
+
+    /*     const wsServer = new ws.Server({
       port: 4000,
       path: "/subscriptions",
     });

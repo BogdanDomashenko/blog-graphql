@@ -3,6 +3,7 @@ const { JwtService } = require("../services/Jwt.service");
 const { PostService } = require("../services/Post.service");
 const { UserService } = require("../services/User.service");
 const { MessageService } = require("../services/Message.service");
+const pubsub = require("../helpers/pubsub");
 
 const NEW_MESSAGE_EVENT = "NEW_MESSAGE_EVENT";
 
@@ -51,21 +52,21 @@ exports.resolvers = {
       );
       return post;
     },
-    addMessage: async (_, { input }, { pubsub, user }) => {
+    addMessage: async (_, { input }, { user }) => {
       if (!user) {
         throw new Error("Unautorized");
       }
 
       const message = await MessageService.create(user.id, input.text);
 
-      pubsub.publish(NEW_MESSAGE_EVENT, message);
+      pubsub.publish(NEW_MESSAGE_EVENT, { messageAdded: message });
 
       return message;
     },
   },
   Subscription: {
     messageAdded: {
-      subscribe: (_, __, { pubsub }) => pubsub.asyncIterator(NEW_MESSAGE_EVENT),
+      subscribe: () => pubsub.asyncIterator(NEW_MESSAGE_EVENT),
     },
   },
 };

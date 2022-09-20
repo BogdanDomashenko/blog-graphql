@@ -7,6 +7,12 @@
 var app = require("../app");
 var debug = require("debug")("back:server");
 var http = require("http");
+const ws = require("ws");
+const { execute, subscribe } = require("graphql");
+const { useServer } = require("graphql-ws/lib/use/ws");
+const { makeExecutableSchema } = require("@graphql-tools/schema");
+const { grapqlSchema } = require("../graphql/schema");
+const { resolvers } = require("../graphql/root");
 
 /**
  * Get port from environment and store in Express.
@@ -79,10 +85,42 @@ function onError(error) {
  * Event listener for HTTP server "listening" event.
  */
 
+const schema = makeExecutableSchema({ typeDefs: grapqlSchema, resolvers });
+
 function onListening() {
   var addr = server.address();
   var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
   debug("Listening on " + bind);
+
+  const wsServer = new ws.Server({
+    server,
+    path: "/subscriptions",
+  });
+
+  useServer(
+    {
+      schema,
+      execute,
+      subscribe,
+      onConnect: (ctx) => {
+        console.log("Connect");
+      },
+      onSubscribe: (ctx, msg) => {
+        console.log("Subscribe");
+      },
+      onNext: (ctx, msg, args, result) => {
+        console.debug("Next");
+      },
+      onError: (ctx, msg, errors) => {
+        console.error("Error");
+      },
+      onComplete: (ctx, msg) => {
+        console.log("Complete");
+      },
+    },
+    wsServer
+  );
+  console.log(`WebSockets listening on ws://localhost:3000/subscriptions`);
 }
 
 exports.server = server;
