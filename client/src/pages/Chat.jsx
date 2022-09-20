@@ -30,7 +30,7 @@ const MessageForm = styled.form`
 const Chat = () => {
   const token = localStorage.getItem("token");
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
 
   const [messages, setMessages] = useState([]);
   const [latestMessage, setLatestMessage] = useState(null);
@@ -61,6 +61,7 @@ const Chat = () => {
   }, [latestMessageData]);
 
   const onSubmit = async (data) => {
+    reset();
     await addMessage({ variables: { input: data } });
   };
 
@@ -69,13 +70,6 @@ const Chat = () => {
       <Wrapper>
         chat
         <MessagesContainer>
-          {/* <Message author="bogdan" text="hi" />
-          <Message author="bogdan" text="hi" />
-          <Message author="bogdan" text="hi" />
-          <Message author="bogdan" text="hi" position="right" />
-          <Message author="bogdan" text="hi" />
-          <Message author="bogdan" text="hi" position="right" />
-          <Message author="bogdan" text="hi" position="right" /> */}
           {!loadingMessages &&
             messages.map((message) => (
               <Message
