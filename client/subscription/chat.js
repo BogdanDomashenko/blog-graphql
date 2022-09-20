@@ -1,6 +1,6 @@
 const CHAT_SUBSCRIPTION = gql`
   subscription OnMessageAdded($messageId: ID!) {
-    commentAdded(postID: $postID) {
+    messageAdded(postID: $postID) {
       id
       author
       text
