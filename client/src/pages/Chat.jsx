@@ -14,7 +14,7 @@ const MessagesContainer = styled.div`
   overflow-y: auto;
 `;
 
-const SendMessage = styled.div`
+const MessageForm = styled.form`
   display: flex;
   gap: 10px;
   margin-top: 20px;
@@ -34,10 +34,10 @@ const Chat = () => {
           <Message author="bogdan" text="hi" position="right" />
           <Message author="bogdan" text="hi" position="right" />
         </MessagesContainer>
-        <SendMessage>
+        <MessageForm>
           <TextField label="Message" fullWidth />
           <Button>Send</Button>
-        </SendMessage>
+        </MessageForm>
       </Wrapper>
     </Container>
   );
