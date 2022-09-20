@@ -4,10 +4,14 @@ import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
 import Message from "../components/message/Message";
 import Wrapper from "../components/wrapper/Wrapper";
-import { split, useSubscription } from "@apollo/client";
+import { split, useMutation, useQuery, useSubscription } from "@apollo/client";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
-import { MESSAGE_SUBSCRIPTION } from "../../subscription/message";
+import { useEffect, useState } from "react";
+import {
+  ADD_MESSAGE,
+  GET_ALL_MESSAGES,
+  MESSAGE_SUBSCRIPTION,
+} from "../../subscription/message";
 
 const MessagesContainer = styled.div`
   display: flex;
@@ -24,31 +28,70 @@ const MessageForm = styled.form`
 `;
 
 const Chat = () => {
+  const token = localStorage.getItem("token");
+
   const { register, handleSubmit } = useForm();
 
-  /* const [signin] = useMutation(SIGNIN); */
-  const { data, loading } = useSubscription(MESSAGE_SUBSCRIPTION);
+  const [messages, setMessages] = useState([]);
+  const [latestMessage, setLatestMessage] = useState(null);
+
+  const { data: latestMessageData, loadingLatestMessage } =
+    useSubscription(MESSAGE_SUBSCRIPTION);
+  const { data: messagesData, loading: loadingMessages } =
+    useQuery(GET_ALL_MESSAGES);
+  const [addMessage] = useMutation(ADD_MESSAGE, {
+    context: {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    },
+  });
 
   useEffect(() => {
-    console.log(data);
-  }, [data]);
+    if (!loadingMessages && messagesData?.getAllMessages) {
+      setMessages(messagesData?.getAllMessages);
+    }
+  }, [messagesData]);
+
+  useEffect(() => {
+    if (!loadingLatestMessage && latestMessageData?.messageAdded) {
+      setMessages([...messages, latestMessageData.messageAdded]);
+      setLatestMessage(latestMessageData?.messageAdded);
+    }
+  }, [latestMessageData]);
+
+  const onSubmit = async (data) => {
+    await addMessage({ variables: { input: data } });
+  };
 
   return (
     <Container>
       <Wrapper>
         chat
         <MessagesContainer>
-          <Message author="bogdan" text="hi" />
+          {/* <Message author="bogdan" text="hi" />
           <Message author="bogdan" text="hi" />
           <Message author="bogdan" text="hi" />
           <Message author="bogdan" text="hi" position="right" />
           <Message author="bogdan" text="hi" />
           <Message author="bogdan" text="hi" position="right" />
-          <Message author="bogdan" text="hi" position="right" />
+          <Message author="bogdan" text="hi" position="right" /> */}
+          {!loadingMessages &&
+            messages.map((message) => (
+              <Message
+                key={message.id}
+                author={message.author.username}
+                text={message.text}
+              />
+            ))}
         </MessagesContainer>
-        <MessageForm>
-          <TextField label="Message" fullWidth />
-          <Button>Send</Button>
+        <MessageForm onSubmit={handleSubmit(onSubmit)}>
+          <TextField
+            label="Message"
+            fullWidth
+            {...register("text", { required: true })}
+          />
+          <Button type="submit">Send</Button>
         </MessageForm>
       </Wrapper>
     </Container>
